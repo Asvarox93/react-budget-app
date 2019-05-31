@@ -20,19 +20,16 @@ const Cockpit: React.FC = () => {
 
   return (
     <Grid container spacing={3}>
-      {/* Dawniej Charts */}
       <Grid item xs={12} md={8} lg={9}>
         <Paper className={fixedHeightPaper}>
           <Typography>Monthly</Typography>
         </Paper>
       </Grid>
-      {/* Dawniej Deposits */}
       <Grid item xs={12} md={4} lg={3}>
         <Paper className={fixedHeightPaper}>
           <Typography>Recent Deposits</Typography>
         </Paper>
       </Grid>
-      {/* Dawniej orders */}
       <Grid item xs={12}>
         <Paper className={classes.paper}>
           <Typography>Todo Tasks</Typography>
