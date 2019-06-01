@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Grid, Paper, Typography, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 import * as budgetInterfaces from "../interfaces/budget_interface";
 import AddForm from "./addForm";
-import ListItems from "./listItems";
+import Expenses from "./expenses";
+import Incomes from "./incomes";
+import BudgetBox from "./budgetBox";
 
 const useStyle = makeStyles(theme => ({
   paper: {
@@ -28,98 +30,42 @@ const Budget: React.FC = props => {
   const classes = useStyle();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  const [budget, setBudget] = React.useState<budgetInterfaces.state>({
-    incomes: [],
-    expenses: [],
+  const [formVal, setFormVal] = React.useState<budgetInterfaces.state>({
+    incomesFormValue: {},
+    expensesFormValue: {}
+  });
+
+  const [budgetSum, setbudgetSum] = React.useState<
+    budgetInterfaces.budgetSumState
+  >({
     incomesSum: 0,
     expensesSum: 0
   });
 
-  const addToBudget = (form: budgetInterfaces.form) => {
-    const { budgetType, amount, description } = form;
-    const added = new Date()
-      .toJSON()
-      .slice(0, 10)
-      .replace(/-/g, "/");
+  const addToFormVal = (form: budgetInterfaces.form) => {
+    const { budgetType } = form;
 
     if (budgetType === "incomes") {
-      const id = getIncomesId();
-      addToIncomes({ id, amount, description, added });
+      addToIncomes(form);
     }
     if (budgetType === "expenses") {
-      const id = getEspensesId();
-      addToExpenses({ id, amount, description, added });
+      addToExpenses(form);
     }
   };
 
-  const getIncomesId = () => {
-    let id = 0;
-
-    budget.incomes.forEach((item: any) => {
-      if (item.id === id) {
-        id++;
-      }
-    });
-
-    return id;
-  };
-
-  const getEspensesId = () => {
-    let id = 0;
-
-    budget.expenses.forEach((item: any) => {
-      if (item.id === id) {
-        id++;
-      }
-    });
-
-    return id;
-  };
-
-  const addToIncomes = (data: Object) => {
-    setBudget({
-      ...budget,
-      incomes: [...budget.incomes, data]
+  const addToIncomes = (data: object) => {
+    setFormVal({
+      ...formVal,
+      incomesFormValue: { ...data }
     });
   };
 
-  const addToExpenses = (data: Object) => {
-    setBudget({
-      ...budget,
-      expenses: [...budget.expenses, data]
+  const addToExpenses = (data: object) => {
+    setFormVal({
+      ...formVal,
+      expensesFormValue: { ...data }
     });
   };
-
-  const setIncomesSum = () => {
-    let sum = 0;
-    console.log("wbj");
-    budget.incomes.forEach((item: any) => {
-      console.log(item);
-      sum += parseInt(item.amount);
-      console.log(sum);
-    });
-
-    setBudget({
-      ...budget,
-      incomesSum: sum
-    });
-  };
-
-  const setExpensesSum = () => {
-    let sum = 0;
-    budget.expenses.forEach((item: any) => {
-      sum += parseInt(item.amount);
-    });
-
-    setBudget({
-      ...budget,
-      expensesSum: sum
-    });
-  };
-
-  useEffect(() => {
-    console.log(budget);
-  }, [budget]);
 
   return (
     <Grid container spacing={3}>
@@ -128,28 +74,22 @@ const Budget: React.FC = props => {
           <Typography>Monthly</Typography>
         </Paper>
       </Grid>
-      <Grid item xs={12} md={4} lg={3}>
-        <Paper className={fixedHeightPaper}>
-          <Typography>Available Budget in MONTH:</Typography>
-        </Paper>
-      </Grid>
+      <BudgetBox budgetSum={budgetSum} />
       <Grid item xs={12}>
         <Paper className={classes.form}>
-          <AddForm addToBudget={addToBudget} />
+          <AddForm addToBudget={addToFormVal} />
         </Paper>
       </Grid>
-      <Grid item xs={12} md={6} lg={6}>
-        <Paper className={fixedHeightPaper}>
-          <Typography>Income</Typography>
-          <ListItems listData={budget.incomes} />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} md={6} lg={6}>
-        <Paper className={fixedHeightPaper}>
-          <Typography>Expanse</Typography>
-          <ListItems listData={budget.expenses} />
-        </Paper>
-      </Grid>
+      <Incomes
+        incomeVal={formVal.incomesFormValue}
+        incomesSum={budgetSum}
+        setIncomeSum={setbudgetSum}
+      />
+      <Expenses
+        expneseVal={formVal.expensesFormValue}
+        expnesesSum={budgetSum}
+        setExpensesSum={setbudgetSum}
+      />
     </Grid>
   );
 };

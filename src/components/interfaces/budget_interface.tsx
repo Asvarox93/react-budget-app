@@ -1,12 +1,15 @@
 export interface state {
-  incomes: Array<Object>;
-  expenses: Array<Object>;
-  incomesSum: number;
-  expensesSum: number;
+  incomesFormValue: object;
+  expensesFormValue: object;
 }
 
 export interface form {
   amount: string;
   budgetType: string;
   description: string;
+}
+
+export interface budgetSumState {
+  incomesSum: number;
+  expensesSum: number;
 }
