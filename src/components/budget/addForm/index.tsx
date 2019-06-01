@@ -1,13 +1,8 @@
 import React from "react";
-import {
-  TextField,
-  MenuItem,
-  InputAdornment,
-  makeStyles,
-  Fab
-} from "@material-ui/core";
+import { TextField, MenuItem, makeStyles, Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import clsx from "clsx";
+import * as addFormInterfaces from "../../interfaces/addForm_interface";
 
 const useStyle = makeStyles(theme => ({
   root: {
@@ -15,13 +10,14 @@ const useStyle = makeStyles(theme => ({
     overflow: "auto",
     flexDirection: "row",
     justifyContent: "center",
+    flexWrap: "wrap",
     width: "100%"
   },
   margin: {
     margin: theme.spacing(1)
   },
   textField: {
-    flexBasis: 400
+    flexBasis: 300
   },
   button: {
     margin: theme.spacing(1),
@@ -31,21 +27,22 @@ const useStyle = makeStyles(theme => ({
 
 const ranges = [
   {
-    value: "income",
-    label: "Income"
+    value: "incomes",
+    label: "Incomes"
   },
   {
-    value: "expense",
-    label: "Expense"
+    value: "expenses",
+    label: "Expenses"
   }
 ];
 
-const AddForm: React.FC = props => {
+const AddForm: React.FC<addFormInterfaces.Props> = props => {
   const classes = useStyle();
 
   const [values, setValues] = React.useState({
-    amount: 0,
-    budgetType: ""
+    amount: "",
+    budgetType: "",
+    description: ""
   });
 
   const handleChange = (prop: string) => (event: {
@@ -55,7 +52,7 @@ const AddForm: React.FC = props => {
   };
 
   const handleSubmit = () => {
-    console.log("działam");
+    props.addToBudget(values);
   };
 
   return (
@@ -78,12 +75,17 @@ const AddForm: React.FC = props => {
         id="outlined-adornment-amount"
         className={clsx(classes.margin, classes.textField)}
         variant="outlined"
+        label="Description"
+        value={values.description}
+        onChange={handleChange("description")}
+      />
+      <TextField
+        id="outlined-adornment-amount"
+        className={clsx(classes.margin, classes.textField)}
+        variant="outlined"
         label="Amount"
         value={values.amount}
         onChange={handleChange("amount")}
-        InputProps={{
-          startAdornment: <InputAdornment position="start">$</InputAdornment>
-        }}
       />
       <Fab
         size="small"
