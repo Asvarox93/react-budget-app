@@ -8,8 +8,3 @@ export interface form {
   budgetType: string;
   description: string;
 }
-
-export interface budgetSumState {
-  incomesSum: number;
-  expensesSum: number;
-}

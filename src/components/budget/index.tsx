@@ -1,11 +1,11 @@
 import React from "react";
-import { Grid, Paper, Typography, makeStyles } from "@material-ui/core";
+import { Grid, Paper, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 import * as budgetInterfaces from "../interfaces/budget_interface";
 import AddForm from "./addForm";
-import Expenses from "./expenses";
-import Incomes from "./incomes";
+import BudgetItems from "./budgetItems";
 import BudgetBox from "./budgetBox";
+import BudgetChart from "./budgetChart";
 
 const useStyle = makeStyles(theme => ({
   paper: {
@@ -16,54 +16,50 @@ const useStyle = makeStyles(theme => ({
   },
   fixedHeight: {
     height: 240
-  },
-  form: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "row",
-    justifyContent: "center"
   }
 }));
 
 const Budget: React.FC = props => {
   const classes = useStyle();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const title = {
+    incomes: "Incomes",
+    expenses: "Expenses"
+  };
+
+  const formValParametrs = {
+    incomes: "incomesFormValue",
+    expenses: "expensesFormValue"
+  };
 
   const [formVal, setFormVal] = React.useState<budgetInterfaces.state>({
     incomesFormValue: {},
     expensesFormValue: {}
   });
 
-  const [budgetSum, setbudgetSum] = React.useState<
-    budgetInterfaces.budgetSumState
-  >({
-    incomesSum: 0,
-    expensesSum: 0
-  });
+  const [incomesSum, setIncomesSum] = React.useState<number>(0);
+  const [expensesSum, setExpensesSum] = React.useState<number>(0);
+  const [chartIncomesData, setChartIncomesData] = React.useState<Array<object>>(
+    []
+  );
+  const [chartExpensesData, setChartExpensesData] = React.useState<
+    Array<object>
+  >([]);
 
-  const addToFormVal = (form: budgetInterfaces.form) => {
+  const getDataForFormVal = (form: budgetInterfaces.form) => {
     const { budgetType } = form;
-
-    if (budgetType === "incomes") {
-      addToIncomes(form);
+    if (budgetType === title.incomes) {
+      addToFormVal(form, formValParametrs.incomes);
     }
-    if (budgetType === "expenses") {
-      addToExpenses(form);
+    if (budgetType === title.expenses) {
+      addToFormVal(form, formValParametrs.expenses);
     }
   };
 
-  const addToIncomes = (data: object) => {
+  const addToFormVal = (data: object, formValType: string) => {
     setFormVal({
       ...formVal,
-      incomesFormValue: { ...data }
-    });
-  };
-
-  const addToExpenses = (data: object) => {
-    setFormVal({
-      ...formVal,
-      expensesFormValue: { ...data }
+      [formValType]: { ...data }
     });
   };
 
@@ -71,24 +67,25 @@ const Budget: React.FC = props => {
     <Grid container spacing={3}>
       <Grid item xs={12} md={8} lg={9}>
         <Paper className={fixedHeightPaper}>
-          <Typography>Monthly</Typography>
+          <BudgetChart
+            chartIncomesData={chartIncomesData}
+            chartExpensesData={chartExpensesData}
+          />
         </Paper>
       </Grid>
-      <BudgetBox budgetSum={budgetSum} />
-      <Grid item xs={12}>
-        <Paper className={classes.form}>
-          <AddForm addToBudget={addToFormVal} />
-        </Paper>
-      </Grid>
-      <Incomes
-        incomeVal={formVal.incomesFormValue}
-        incomesSum={budgetSum}
-        setIncomeSum={setbudgetSum}
+      <BudgetBox incomesSum={incomesSum} expensesSum={expensesSum} />
+      <AddForm addToBudget={getDataForFormVal} />
+      <BudgetItems
+        budgetItemTitle={title.incomes}
+        budgetItemVal={formVal.incomesFormValue}
+        setBudgetItemSum={setIncomesSum}
+        setChartData={setChartIncomesData}
       />
-      <Expenses
-        expneseVal={formVal.expensesFormValue}
-        expnesesSum={budgetSum}
-        setExpensesSum={setbudgetSum}
+      <BudgetItems
+        budgetItemTitle={title.expenses}
+        budgetItemVal={formVal.expensesFormValue}
+        setBudgetItemSum={setExpensesSum}
+        setChartData={setChartExpensesData}
       />
     </Grid>
   );

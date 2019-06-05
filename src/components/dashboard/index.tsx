@@ -22,16 +22,14 @@ import Menu from "./menu";
 import Todo from "../todo";
 import Budget from "../budget";
 import Cockpit from "../cockpit";
-// import { mainListItems, secondaryListItems } from "./listItems";
 
 const MadeWithLove = () => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {"Built with love by the "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Material-UI
+      {"Built with love by "}
+      <Link color="inherit" href="https://sbialek.com/">
+        Sebastian Białek
       </Link>
-      {" team."}
     </Typography>
   );
 };

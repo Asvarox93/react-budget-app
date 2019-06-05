@@ -1,6 +1,4 @@
 export interface props {
-  budgetSum: {
-    incomesSum: number;
-    expensesSum: number;
-  };
+  incomesSum: number;
+  expensesSum: number;
 }
