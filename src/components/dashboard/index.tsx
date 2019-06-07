@@ -36,11 +36,12 @@ const MadeWithLove = () => {
 
 const Dashboard: React.FC<dashboardInterfaces.Props> = props => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState<boolean>(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+  
   const handleDrawerClose = () => {
     setOpen(false);
   };
@@ -48,10 +49,11 @@ const Dashboard: React.FC<dashboardInterfaces.Props> = props => {
   const changeToolBarTitle = () => {
     const url = props.location.pathname;
     const slice = url.charAt(1).toUpperCase() + url.slice(2);
-
     return slice ? slice : "Dashboard";
   };
+
   changeToolBarTitle();
+  
   return (
     <div className={classes.root}>
       <CssBaseline />

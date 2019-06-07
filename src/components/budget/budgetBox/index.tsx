@@ -1,30 +1,6 @@
 import React, { useEffect } from "react";
-import { Grid, Paper, Typography, makeStyles } from "@material-ui/core";
-import * as budgetBoxInterface from "../../interfaces/budgetBox_interface";
-import clsx from "clsx";
-
-const useStyle = makeStyles(theme => ({
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    color: "#fff",
-    marginTop: 7,
-    height: 65
-  },
-  incomes: {
-    backgroundColor: "#43A047"
-  },
-  expenses: {
-    backgroundColor: "#D22F2F"
-  },
-  available: {
-    backgroundColor: "#3F51B5"
-  }
-}));
+import * as budgetBoxInterface from "../../interfaces/budgetBox/budgetBox_interface";
+import Box from "./presentation";
 
 const Months = [
   "January",
@@ -41,12 +17,10 @@ const Months = [
   "December"
 ];
 
-const BudgetBox: React.FC<budgetBoxInterface.props> = props => {
-  const classes = useStyle();
-  const incomesBgc = clsx(classes.paper, classes.incomes);
-  const expensesBgc = clsx(classes.paper, classes.expenses);
-  const availableBgc = clsx(classes.paper, classes.available);
-  const { incomesSum, expensesSum } = props;
+const BudgetBox: React.FC<budgetBoxInterface.props> = ({
+  incomesSum,
+  expensesSum
+}) => {
   const [availableBudget, setAvailableBudget] = React.useState<number>(0);
   const [expensesPercent, setExpensesPercent] = React.useState<number>(0);
 
@@ -76,19 +50,13 @@ const BudgetBox: React.FC<budgetBoxInterface.props> = props => {
   }, [incomesSum, expensesSum]);
 
   return (
-    <Grid item xs={12} md={4} lg={3}>
-      <Typography>Available Budget in {getCurrentMonth()}:</Typography>
-      <Paper className={incomesBgc}>
-        <Typography>Incomes: {incomesSum}$</Typography>
-      </Paper>
-      <Paper className={expensesBgc}>
-        <Typography>Expenses: {expensesSum}$</Typography>
-        <Typography>{expensesPercent}%</Typography>
-      </Paper>
-      <Paper className={availableBgc}>
-        <Typography>Available: {availableBudget}$</Typography>
-      </Paper>
-    </Grid>
+    <Box
+      getCurrentMonth={getCurrentMonth}
+      incomesSum={incomesSum}
+      expensesSum={expensesSum}
+      expensesPercent={expensesPercent}
+      availableBudget={availableBudget}
+    />
   );
 };
 

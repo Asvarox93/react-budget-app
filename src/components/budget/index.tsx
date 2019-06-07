@@ -1,41 +1,21 @@
 import React from "react";
-import { Grid, Paper, makeStyles } from "@material-ui/core";
-import clsx from "clsx";
-import * as budgetInterfaces from "../interfaces/budget_interface";
-import AddForm from "./addForm";
-import BudgetItems from "./budgetItems";
-import BudgetBox from "./budgetBox";
-import BudgetChart from "./budgetChart";
+import BudgetGui from "./presentation";
+import { State, Form } from "../interfaces/budget/budget_interface";
 
-const useStyle = makeStyles(theme => ({
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column"
+const initalState = {
+  incomes: {
+    description: "",
+    budgetType: "",
+    amount: ""
   },
-  fixedHeight: {
-    height: 240
+  expenses: {
+    description: "",
+    budgetType: "",
+    amount: ""
   }
-}));
-
+};
 const Budget: React.FC = props => {
-  const classes = useStyle();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  const title = {
-    incomes: "Incomes",
-    expenses: "Expenses"
-  };
-
-  const formValParametrs = {
-    incomes: "incomesFormValue",
-    expenses: "expensesFormValue"
-  };
-
-  const [formVal, setFormVal] = React.useState<budgetInterfaces.state>({
-    incomesFormValue: {},
-    expensesFormValue: {}
-  });
+  const [formVal, setFormVal] = React.useState<State>(initalState);
 
   const [incomesSum, setIncomesSum] = React.useState<number>(0);
   const [expensesSum, setExpensesSum] = React.useState<number>(0);
@@ -46,48 +26,27 @@ const Budget: React.FC = props => {
     Array<object>
   >([]);
 
-  const getDataForFormVal = (form: budgetInterfaces.form) => {
+  const getDataForFormVal = (form: Form) => {
     const { budgetType } = form;
-    if (budgetType === title.incomes) {
-      addToFormVal(form, formValParametrs.incomes);
-    }
-    if (budgetType === title.expenses) {
-      addToFormVal(form, formValParametrs.expenses);
-    }
-  };
-
-  const addToFormVal = (data: object, formValType: string) => {
     setFormVal({
       ...formVal,
-      [formValType]: { ...data }
+      [budgetType]: { ...form }
     });
   };
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={8} lg={9}>
-        <Paper className={fixedHeightPaper}>
-          <BudgetChart
-            chartIncomesData={chartIncomesData}
-            chartExpensesData={chartExpensesData}
-          />
-        </Paper>
-      </Grid>
-      <BudgetBox incomesSum={incomesSum} expensesSum={expensesSum} />
-      <AddForm addToBudget={getDataForFormVal} />
-      <BudgetItems
-        budgetItemTitle={title.incomes}
-        budgetItemVal={formVal.incomesFormValue}
-        setBudgetItemSum={setIncomesSum}
-        setChartData={setChartIncomesData}
-      />
-      <BudgetItems
-        budgetItemTitle={title.expenses}
-        budgetItemVal={formVal.expensesFormValue}
-        setBudgetItemSum={setExpensesSum}
-        setChartData={setChartExpensesData}
-      />
-    </Grid>
+    <BudgetGui
+      chartIncomesData={chartIncomesData}
+      chartExpensesData={chartExpensesData}
+      incomesSum={incomesSum}
+      expensesSum={expensesSum}
+      getDataForFormVal={getDataForFormVal}
+      formVal={formVal}
+      setIncomesSum={setIncomesSum}
+      setChartIncomesData={setChartIncomesData}
+      setExpensesSum={setExpensesSum}
+      setChartExpensesData={setChartExpensesData}
+    />
   );
 };
 

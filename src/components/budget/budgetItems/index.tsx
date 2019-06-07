@@ -1,21 +1,13 @@
-import React, { Fragment, useEffect } from "react";
-import * as budgetItemsInterfaces from "../../interfaces/budgetItems_interface";
-import ListItems from "../listItems";
-import { Grid, Paper, Typography, makeStyles } from "@material-ui/core";
+import React, { useEffect } from "react";
+import {
+  State,
+  Props,
+  Data
+} from "../../interfaces/budgetItems/budgetItems_interface";
+import Revenue from "./presentation";
 import { getSampleData } from "./sampleData";
 
-const useStyle = makeStyles(theme => ({
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
-    height: 240
-  }
-}));
-
-const BudgetItems: React.FC<budgetItemsInterfaces.props> = props => {
-  const classes = useStyle();
+const BudgetItems: React.FC<Props> = props => {
   const {
     setBudgetItemSum,
     budgetItemVal,
@@ -23,7 +15,7 @@ const BudgetItems: React.FC<budgetItemsInterfaces.props> = props => {
     setChartData
   } = props;
 
-  const [dataItem, setDataItem] = React.useState<budgetItemsInterfaces.state>({
+  const [dataItem, setDataItem] = React.useState<State>({
     data: []
   });
 
@@ -36,10 +28,14 @@ const BudgetItems: React.FC<budgetItemsInterfaces.props> = props => {
     return Math.floor(sum * 100) / 100;
   };
 
-  const removeDataItem = (val: number) => {
-    const array: Array<object> = [...dataItem.data];
-    const index = dataItem.data.indexOf(val);
-
+  interface test {
+    id: string;
+    registrationId: number;
+  }
+  const removeDataItem = (val: string) => {
+    const array: Array<Data> = [...dataItem.data];
+    console.log("item:", dataItem.data);
+    const index = dataItem.data.findIndex((el: Data) => el.id === val);
     if (index !== -1) {
       array.splice(index, 1);
       setDataItem({
@@ -77,7 +73,7 @@ const BudgetItems: React.FC<budgetItemsInterfaces.props> = props => {
 
   // Loading Sample Data For BudgetItems
   useEffect(() => {
-    const sampleData = getSampleData(budgetItemTitle);
+    const sampleData: Data[] = getSampleData(budgetItemTitle);
     setDataItem({
       data: sampleData
     });
@@ -104,14 +100,11 @@ const BudgetItems: React.FC<budgetItemsInterfaces.props> = props => {
   }, [dataItem]);
 
   return (
-    <Fragment>
-      <Grid item xs={12} md={6} lg={6}>
-        <Paper className={classes.paper}>
-          <Typography>{budgetItemTitle}</Typography>
-          <ListItems listData={dataItem.data} removeItem={removeDataItem} />
-        </Paper>
-      </Grid>
-    </Fragment>
+    <Revenue
+      budgetItemTitle={budgetItemTitle}
+      dataItem={dataItem.data}
+      removeDataItem={removeDataItem}
+    />
   );
 };
 
