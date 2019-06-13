@@ -13,7 +13,9 @@ const useStyle = makeStyles(theme => ({
 }));
 
 const TextFields: React.FC<textFieldsInterfaces.Props> = ({
-  values,
+  value,
+  valueVerible = null,
+  label,
   handleChange
 }) => {
   const classes = useStyle();
@@ -22,16 +24,9 @@ const TextFields: React.FC<textFieldsInterfaces.Props> = ({
       <TextField
         className={clsx(classes.margin, classes.textField)}
         variant="outlined"
-        label="Description"
-        value={values.description}
-        onChange={handleChange("description")}
-      />
-      <TextField
-        className={clsx(classes.margin, classes.textField)}
-        variant="outlined"
-        label="Amount"
-        value={values.amount}
-        onChange={handleChange("amount")}
+        label={label}
+        value={value}
+        onChange={handleChange(valueVerible)}
       />
     </Fragment>
   );

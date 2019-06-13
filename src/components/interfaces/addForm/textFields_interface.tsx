@@ -1,8 +1,6 @@
 export interface Props {
-  values: {
-    amount: string;
-    budgetType: string;
-    description: string;
-  };
+  value: string;
+  valueVerible?: string;
+  label: string;
   handleChange: Function;
 }

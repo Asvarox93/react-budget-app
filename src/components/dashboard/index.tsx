@@ -10,8 +10,6 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -41,7 +39,7 @@ const Dashboard: React.FC<dashboardInterfaces.Props> = props => {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-  
+
   const handleDrawerClose = () => {
     setOpen(false);
   };
@@ -53,7 +51,7 @@ const Dashboard: React.FC<dashboardInterfaces.Props> = props => {
   };
 
   changeToolBarTitle();
-  
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -112,13 +110,11 @@ const Dashboard: React.FC<dashboardInterfaces.Props> = props => {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            <Route exact path="/" component={Cockpit} />
-            <Route path="/budget" component={Budget} />
-            <Route path="/todo" component={Todo} />
-          </Grid>
-        </Container>
+
+        <Route exact path="/" component={Cockpit} />
+        <Route path="/budget" component={Budget} />
+        <Route path="/todo" component={Todo} />
+
         <MadeWithLove />
       </main>
     </div>

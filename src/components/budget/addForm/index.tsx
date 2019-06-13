@@ -2,9 +2,18 @@ import React from "react";
 import * as addFormInterfaces from "../../interfaces/addForm/addForm_interface";
 import Form from "./presentation";
 
-const AddForm: React.FC<addFormInterfaces.Props> = props => {
-  const { addToBudget } = props;
+const formSelectRanges = [
+  {
+    value: "incomes",
+    label: "Incomes"
+  },
+  {
+    value: "expenses",
+    label: "Expenses"
+  }
+];
 
+const AddForm: React.FC<addFormInterfaces.Props> = ({ addToBudget }) => {
   const [values, setValues] = React.useState({
     amount: "",
     budgetType: "",
@@ -61,6 +70,7 @@ const AddForm: React.FC<addFormInterfaces.Props> = props => {
       snackbar={snackbar}
       errors={errors}
       values={values}
+      ranges={formSelectRanges}
       handleChange={handleChange}
       validateInputs={validateInputs}
     />

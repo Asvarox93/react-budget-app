@@ -12,19 +12,11 @@ const useStyle = makeStyles(theme => ({
   }
 }));
 
-const ranges = [
-  {
-    value: "incomes",
-    label: "Incomes"
-  },
-  {
-    value: "expenses",
-    label: "Expenses"
-  }
-];
-
 const SelectField: React.FC<selectFieldInterfaces.Props> = ({
-  values,
+  value,
+  label,
+  valueVerible,
+  range,
   handleChange
 }) => {
   const classes = useStyle();
@@ -33,11 +25,11 @@ const SelectField: React.FC<selectFieldInterfaces.Props> = ({
       select
       className={clsx(classes.margin, classes.textField)}
       variant="outlined"
-      label="Budget Type"
-      value={values.budgetType}
-      onChange={handleChange("budgetType")}
+      label={label}
+      value={value}
+      onChange={handleChange(valueVerible)}
     >
-      {ranges.map(option => (
+      {range.map(option => (
         <MenuItem key={option.value} value={option.value}>
           {option.label}
         </MenuItem>

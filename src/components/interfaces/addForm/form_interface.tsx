@@ -6,6 +6,12 @@ export interface Props {
     budgetType: string;
     description: string;
   };
+  ranges: Array<RangeType>;
   handleChange: Function;
   validateInputs: () => void;
 }
+
+type RangeType = {
+  value: string;
+  label: string;
+};
