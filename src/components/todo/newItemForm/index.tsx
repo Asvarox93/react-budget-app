@@ -64,11 +64,16 @@ const NewItem: React.FC<any> = ({ dispatch, getCurrentListsName }) => {
     e.preventDefault();
     // TODO: make validation and errors apear
 
+    if (list === "" || note === "") {
+      console.log("Fields cannot be empty!");
+      return;
+    }
     dispatch({
       type: "ADD_LIST_ITEM",
       payload: { id: getUniqueId(), note: note },
       listName: list
     });
+    setNote("");
   };
 
   return (

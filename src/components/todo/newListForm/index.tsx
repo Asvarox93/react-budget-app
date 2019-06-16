@@ -38,8 +38,12 @@ const NewList: React.FC<any> = ({ dispatch, getCurrentListsName }) => {
 
   const validateInputs = (e?: any) => {
     e.preventDefault();
-    const currentLists: Array<string> = getCurrentListsName();
+    if (listName === "") {
+      console.log("Fields cannot be empty!");
+      return;
+    }
 
+    const currentLists: Array<string> = getCurrentListsName();
     if (currentLists.includes(listName)) {
       // TODO: make validation and errors apear
       console.log("error! Nazwa istnieje");
@@ -47,6 +51,7 @@ const NewList: React.FC<any> = ({ dispatch, getCurrentListsName }) => {
     }
 
     dispatch({ type: "ADD_LIST", payload: listName });
+    setListName("");
   };
 
   return (
