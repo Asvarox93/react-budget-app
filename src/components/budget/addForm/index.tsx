@@ -39,18 +39,11 @@ const AddForm: React.FC<addFormInterfaces.Props> = ({ addToBudget }) => {
     /* eslint-enable */
 
     if (!amount || !budgetType || !description)
-      inputErrors = [...inputErrors, "Fields cannot be empty!"];
-
+      inputErrors.push("Fields cannot be empty!");
     if (amount && !amountReg.test(amount))
-      inputErrors = [
-        ...inputErrors,
-        "Amount cannot contains any characters and comma!"
-      ];
+      inputErrors.push("Amount cannot contains any characters and comma!");
     if (description && description.length < 3)
-      inputErrors = [
-        ...inputErrors,
-        "Description must contains min. 3 characters!"
-      ];
+      inputErrors.push("Description must contains min. 3 characters!");
 
     if (inputErrors.length > 0) {
       setErrors(inputErrors);

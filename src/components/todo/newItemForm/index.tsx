@@ -1,44 +1,21 @@
 import React, { useState } from "react";
-import { Grid, Paper, makeStyles, Typography } from "@material-ui/core";
-import clsx from "clsx";
-import TextFields from "../../budget/addForm/presentation/textFields";
-import SelectField from "../../budget/addForm/presentation/selectField";
-import SubmitButton from "../../budget/addForm/presentation/submitButton";
+import { Props } from "../../interfaces/newItem/newItem_interface";
+import NewItemForm from "./presentation";
 
-const useStyle = makeStyles(theme => ({
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
-    width: "100%"
-  },
-  fixedHeight: {
-    height: 140
-  },
-  form: {
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "nowrap",
-    width: "100%"
-  }
-}));
-
-const NewItem: React.FC<any> = ({ dispatch, getCurrentListsName }) => {
-  const classes = useStyle();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
+const NewItem: React.FC<Props> = ({ dispatch, getCurrentListsName }) => {
   const [list, setList] = useState<string>("");
   const [note, setNote] = useState<string>("");
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const handleNoteChange = () => (event: any) => {
+  const handleNoteChange = () => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setNote(event.target.value);
   };
 
-  const handleListChange = () => (event: any) => {
+  const handleListChange = () => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setList(event.target.value);
   };
 
@@ -52,7 +29,7 @@ const NewItem: React.FC<any> = ({ dispatch, getCurrentListsName }) => {
   };
 
   const setSelectOption = () => {
-    const range = getCurrentListsName().map((item: any) => ({
+    const range = getCurrentListsName().map((item: string) => ({
       value: item,
       label: item
     }));
@@ -60,45 +37,41 @@ const NewItem: React.FC<any> = ({ dispatch, getCurrentListsName }) => {
     return range;
   };
 
-  const validateInputs = (e?: any) => {
-    e.preventDefault();
-    // TODO: make validation and errors apear
-
-    if (list === "" || note === "") {
-      console.log("Fields cannot be empty!");
-      return;
-    }
+  const submitForm = () => {
     dispatch({
       type: "ADD_LIST_ITEM",
       payload: { id: getUniqueId(), note: note },
       listName: list
     });
+    setErrors([]);
     setNote("");
   };
 
+  const validateInputs = (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
+
+    let inputErrors: string[] = [];
+    if (list === "" || note === "") inputErrors.push("Fields cannot be empty!");
+    if (note.length < 3)
+      inputErrors.push("Description must contains min. 3 characters!");
+    if (inputErrors.length > 0) {
+      setErrors(inputErrors);
+      return;
+    }
+    submitForm();
+  };
+
   return (
-    <Grid item xs={12} md={7} lg={7}>
-      <Paper className={fixedHeightPaper}>
-        <Typography>Add Item To List</Typography>
-        <form className={classes.form} onSubmit={validateInputs}>
-          <SelectField
-            value={list}
-            label="Choose List"
-            range={setSelectOption()}
-            handleChange={handleListChange}
-          />
-          <TextFields
-            value={note}
-            label="List Name"
-            handleChange={handleNoteChange}
-          />
-          <SubmitButton validateInputs={validateInputs} />
-        </form>
-      </Paper>
-    </Grid>
+    <NewItemForm
+      list={list}
+      handleListChange={handleListChange}
+      note={note}
+      handleNoteChange={handleNoteChange}
+      validateInputs={validateInputs}
+      setSelectOption={setSelectOption}
+      errors={errors}
+    />
   );
 };
 
 export default NewItem;
-
-//TODO: Refactoring component to small pieces and better code

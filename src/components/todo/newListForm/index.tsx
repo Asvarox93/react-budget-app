@@ -1,76 +1,52 @@
 import React, { useState } from "react";
-import { Grid, Paper, makeStyles, Typography } from "@material-ui/core";
-import clsx from "clsx";
-import TextFields from "../../budget/addForm/presentation/textFields";
-import SubmitButton from "../../budget/addForm/presentation/submitButton";
+import { Props } from "../../interfaces/newList/newList_interface";
+import NewListForm from "./presentation";
 
-const useStyle = makeStyles(theme => ({
-  paper: {
-    padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
-    width: "100%"
-  },
-  fixedHeight: {
-    height: 140
-  },
-  form: {
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "row",
-    flexWrap: "nowrap",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%"
-  }
-}));
-
-const NewList: React.FC<any> = ({ dispatch, getCurrentListsName }) => {
-  const classes = useStyle();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
+const NewList: React.FC<Props> = ({ dispatch, getCurrentListsName }) => {
   const [listName, setListName] = useState<string>("");
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const handleChange = () => (event: any) => {
+  const handleChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
     setListName(event.target.value);
   };
 
-  const validateInputs = (e?: any) => {
-    e.preventDefault();
-    if (listName === "") {
-      console.log("Fields cannot be empty!");
-      return;
-    }
-
-    const currentLists: Array<string> = getCurrentListsName();
-    if (currentLists.includes(listName)) {
-      // TODO: make validation and errors apear
-      console.log("error! Nazwa istnieje");
-      return;
-    }
-
-    dispatch({ type: "ADD_LIST", payload: listName });
+  const submitHandle = (listNameUp: string) => {
+    dispatch({ type: "ADD_LIST", payload: listNameUp });
     setListName("");
+    setErrors([]);
+  };
+
+  const validateInputs = (e?: React.FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
+
+    let inputErrors: string[] = [];
+    const listNameUp = listName.toUpperCase();
+
+    if (listName === "") inputErrors.push("Fields cannot be empty!");
+    const currentLists: Array<string> = getCurrentListsName();
+    if (
+      currentLists
+        .toString()
+        .toUpperCase()
+        .includes(listNameUp)
+    )
+      inputErrors.push("List name cannot be repeated!");
+
+    if (inputErrors.length > 0) {
+      setErrors(inputErrors);
+      return;
+    }
+    submitHandle(listNameUp);
   };
 
   return (
-    <Grid item xs={12} md={5} lg={5}>
-      <Paper className={fixedHeightPaper}>
-        <Typography>Add New List</Typography>
-        <form className={classes.form} onSubmit={validateInputs}>
-          <TextFields
-            value={listName}
-            label="List Name"
-            handleChange={handleChange}
-          />
-          <SubmitButton validateInputs={validateInputs} />
-        </form>
-      </Paper>
-    </Grid>
+    <NewListForm
+      listName={listName}
+      handleChange={handleChange}
+      validateInputs={validateInputs}
+      errors={errors}
+    />
   );
 };
 
 export default NewList;
-
-//TODO: Refactoring component to small pieces and better code
