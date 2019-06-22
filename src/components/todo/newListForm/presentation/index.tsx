@@ -15,7 +15,10 @@ const useStyle = makeStyles(theme => ({
     width: "100%"
   },
   fixedHeight: {
-    height: 140
+    height: 140,
+    [theme.breakpoints.down("xs")]: {
+      height: 190
+    }
   },
   form: {
     display: "flex",
@@ -24,7 +27,10 @@ const useStyle = makeStyles(theme => ({
     flexWrap: "nowrap",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%"
+    width: "100%",
+    [theme.breakpoints.down("xs")]: {
+      flexWrap: "wrap"
+    }
   }
 }));
 

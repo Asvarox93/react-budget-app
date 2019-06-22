@@ -1,21 +1,22 @@
 import React from "react";
 import RenderListsPresentation from "../presentation/renderLists";
+import { DropResult, DraggableLocation } from "react-beautiful-dnd";
 
-const RenderLists: React.FC<any> = ({ state = {}, dispatch }) => {
-  const getListStyle = (isDraggingOver: any) => ({
+const RenderLists: React.FC<any> = ({ state, dispatch }) => {
+  const getListStyle = (isDraggingOver: boolean) => ({
     background: isDraggingOver ? "lightgrey" : "#fff"
   });
 
   const move = (
-    source: any,
-    droppableSource: any,
-    droppableDestination: any,
-    destination: any = null
+    source: object[],
+    droppableSource: DraggableLocation,
+    droppableDestination: DraggableLocation,
+    destination?: object[]
   ) => {
     const sourceClone = Array.from(source);
-    let result: any = {};
-    const [removed] = sourceClone.splice(droppableSource.index, 1);
-    if (destination !== null) {
+    let result: { [key: string]: object[] } = {};
+    const [removed]: object[] = sourceClone.splice(droppableSource.index, 1);
+    if (destination) {
       const destClone = Array.from(destination);
       destClone.splice(droppableDestination.index, 0, removed);
 
@@ -28,16 +29,16 @@ const RenderLists: React.FC<any> = ({ state = {}, dispatch }) => {
     return result;
   };
 
-  const getList = (id: any) => state[id];
+  const getList = (id: string) => state[id];
 
-  const reorderItems = (result: any) => {
+  const reorderItems = (result: { [key: string]: object[] }) => {
     dispatch({
       type: "REORDER_ITEMS",
       payload: result
     });
   };
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
 
     if (!destination) {
