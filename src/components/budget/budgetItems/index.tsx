@@ -15,13 +15,15 @@ const BudgetItems: React.FC<Props> = props => {
     setChartData
   } = props;
 
-  const [dataItem, setDataItem] = React.useState<State>({
-    data: []
+  const [dataItems, setDataItems] = React.useState<State>({
+    data: JSON.parse(
+      localStorage.getItem(`budgetData${budgetItemTitle}`) || "[]"
+    )
   });
 
   const setDataSum = () => {
     let sum = 0;
-    dataItem.data.forEach((item: any) => {
+    dataItems.data.forEach((item: any) => {
       sum += parseFloat(item.amount);
     });
 
@@ -29,12 +31,12 @@ const BudgetItems: React.FC<Props> = props => {
   };
 
   const removeDataItem = (val: string) => {
-    const array: Array<Data> = [...dataItem.data];
-    console.log("item:", dataItem.data);
-    const index = dataItem.data.findIndex((el: Data) => el.id === val);
+    const array: Array<Data> = [...dataItems.data];
+    console.log("item:", dataItems.data);
+    const index = dataItems.data.findIndex((el: Data) => el.id === val);
     if (index !== -1) {
       array.splice(index, 1);
-      setDataItem({
+      setDataItems({
         data: array
       });
     }
@@ -60,8 +62,8 @@ const BudgetItems: React.FC<Props> = props => {
       const id = getUniqueId();
       const added = getCurrentDate();
 
-      setDataItem({
-        data: [...dataItem.data, { id, ...budgetItemVal, added }]
+      setDataItems({
+        data: [...dataItems.data, { id, ...budgetItemVal, added }]
       });
     }
     // eslint-disable-next-line
@@ -69,8 +71,10 @@ const BudgetItems: React.FC<Props> = props => {
 
   // Loading Sample Data For BudgetItems
   useEffect(() => {
+    if (localStorage.getItem(`budgetData${budgetItemTitle}`)) return;
+
     const sampleData: Data[] = getSampleData(budgetItemTitle);
-    setDataItem({
+    setDataItems({
       data: sampleData
     });
 
@@ -87,18 +91,22 @@ const BudgetItems: React.FC<Props> = props => {
     setBudgetItemSum(Math.floor(setDataSum() * 100) / 100);
 
     setChartData([
-      ...dataItem.data.map((data: any) => {
+      ...dataItems.data.map((data: any) => {
         return { date: data.added, [budgetItemTitle]: parseFloat(data.amount) };
       })
     ]);
+    localStorage.setItem(
+      `budgetData${budgetItemTitle}`,
+      JSON.stringify(dataItems.data)
+    );
 
     // eslint-disable-next-line
-  }, [dataItem]);
+  }, [dataItems]);
 
   return (
     <Revenue
       budgetItemTitle={budgetItemTitle}
-      dataItem={dataItem.data}
+      dataItem={dataItems.data}
       removeDataItem={removeDataItem}
     />
   );

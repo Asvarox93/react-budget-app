@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import TodoGui from "./presentation";
 
 const reducer = (state: any, action: any) => {
@@ -25,6 +25,10 @@ const reducer = (state: any, action: any) => {
         ...state,
         ...action.payload
       };
+    case "LOAD_LOCALSTORAGE":
+      return {
+        ...action.payload
+      };
     default: {
       return state;
     }
@@ -32,11 +36,19 @@ const reducer = (state: any, action: any) => {
 };
 
 const Todo: React.FC = () => {
-  const [state, dispatch] = useReducer(reducer, []);
+  const [state, dispatch] = useReducer(
+    reducer,
+    JSON.parse(localStorage.getItem("todoData") || "{}")
+  );
 
   const getCurrentListsName = () => {
     return Object.keys(state);
   };
+
+  useEffect(() => {
+    localStorage.setItem("todoData", JSON.stringify(state));
+    // eslint-disable-next-line
+  }, [state]);
 
   return (
     <TodoGui

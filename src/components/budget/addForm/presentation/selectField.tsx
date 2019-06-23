@@ -20,6 +20,8 @@ const SelectField: React.FC<selectFieldInterfaces.Props> = ({
   handleChange
 }) => {
   const classes = useStyle();
+  const noItems = range.length === 0 ? true : false;
+
   return (
     <TextField
       select
@@ -29,11 +31,15 @@ const SelectField: React.FC<selectFieldInterfaces.Props> = ({
       value={value}
       onChange={handleChange(valueVerible)}
     >
-      {range.map(option => (
-        <MenuItem key={option.value} value={option.value}>
-          {option.label}
-        </MenuItem>
-      ))}
+      {noItems ? (
+        <MenuItem disabled>Empty</MenuItem>
+      ) : (
+        range.map(option => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))
+      )}
     </TextField>
   );
 };
