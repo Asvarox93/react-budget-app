@@ -28,10 +28,6 @@ const BudgetItems: React.FC<Props> = props => {
     return Math.floor(sum * 100) / 100;
   };
 
-  interface test {
-    id: string;
-    registrationId: number;
-  }
   const removeDataItem = (val: string) => {
     const array: Array<Data> = [...dataItem.data];
     console.log("item:", dataItem.data);
