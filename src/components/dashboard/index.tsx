@@ -19,7 +19,7 @@ import { useStyles } from "./styles";
 import Menu from "./menu";
 import Todo from "../todo";
 import Budget from "../budget";
-import Cockpit from "../cockpit";
+// import Cockpit from "../cockpit"; - ## not used for now ##
 
 const MadeWithLove = () => {
   return (
@@ -111,7 +111,7 @@ const Dashboard: React.FC<dashboardInterfaces.Props> = props => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
 
-        <Route exact path="/" component={Cockpit} />
+        {/* <Route exact path="/" component={Cockpit} /> - ## Not used for now ## */}
         <Route path="/budget" component={Budget} />
         <Route path="/todo" component={Todo} />
 

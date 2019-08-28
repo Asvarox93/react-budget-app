@@ -3,19 +3,19 @@ import { Link } from "react-router-dom";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import DashboardIcon from "@material-ui/icons/Dashboard";
+// import DashboardIcon from "@material-ui/icons/Dashboard";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import ListIcon from "@material-ui/icons/List";
 
 const Menu: React.FC = () => {
   return (
     <div>
-      <ListItem button component={Link} to="/">
+      {/* <ListItem button component={Link} to="/">
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
-      </ListItem>
+      </ListItem>    - ## Not used for now ## */}
       <ListItem button component={Link} to="/budget">
         <ListItemIcon>
           <AttachMoneyIcon />
